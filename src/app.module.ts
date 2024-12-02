@@ -1,19 +1,21 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MongooseModule } from '@nestjs/mongoose';
+import { AuthGuard } from './auth/auth.guard';
+import { AuthModule } from './auth/auth.module';
+import { AppCacheModule } from './cache/cache.module';
 import { TasksModule } from './tasks/task.module';
 import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './auth/auth.guard';
 
 @Module({
-  imports: [ 
+  imports: [
     TasksModule,
     UsersModule,
-    MongooseModule.forRoot('mongodb://localhost:27017/nest'),
-    AuthModule, 
+    MongooseModule.forRoot(`${process.env.MONGO_URL ?? 'mongodb://localhost:27017/nest'} `),
+    AuthModule,
+    AppCacheModule,
   ],
   controllers: [AppController],
   providers: [
